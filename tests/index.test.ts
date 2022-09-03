@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {pipe, pipeSync} from '../index';
 import type {Middleware} from '../index';
 

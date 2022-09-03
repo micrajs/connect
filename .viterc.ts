@@ -4,7 +4,7 @@ import {cwd} from '@micra/vite-config/utilities/cwd';
 export default defineConfig({
   build: {
     rollupOptions: {
-      external: [],
+      external: ['@micra/error'],
       input: {
         index: cwd('index.ts'),
       },
@@ -13,7 +13,7 @@ export default defineConfig({
 
   test: {
     coverage: {
-      exclude: ['**/*.test.ts', '**/.*.ts']
-    }
-  }
+      exclude: ['**/*.test.ts', '**/.*.ts'],
+    },
+  },
 });

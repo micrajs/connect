@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {HTTPError, isMicraError, WrappedError} from '@micra/error';
 
 export type Handler<
@@ -58,7 +59,7 @@ export function pipe<FinalHandler extends Handler>(
           ? maybeError
           : new WrappedError(
               (maybeError as any) instanceof Error
-                ? maybeError
+                ? (maybeError as Error)
                 : new HTTPError(
                     500,
                     `Error while handling middlewares: ${maybeError}`,
@@ -104,7 +105,7 @@ export function pipeSync<FinalHandler extends SyncHandler>(
           ? maybeError
           : new WrappedError(
               (maybeError as any) instanceof Error
-                ? maybeError
+                ? (maybeError as Error)
                 : new HTTPError(
                     500,
                     `Error while handling middlewares: ${maybeError}`,
