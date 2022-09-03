@@ -11,5 +11,9 @@ export default defineConfig({
     },
   },
 
-  plugins: [],
+  test: {
+    coverage: {
+      exclude: ['**/*.test.ts', '**/.*.ts']
+    }
+  }
 });
