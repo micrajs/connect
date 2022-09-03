@@ -28,7 +28,6 @@
   "devDependencies": {
     "@commitlint/cli": "^16.2.1",
     "@micra/commit-lint-config": "next",
-    "@micra/core": "next",
     "@micra/eslint-config": "next",
     "@micra/typescript-config": "next",
     "@micra/vite-config": "next",
@@ -45,8 +44,5 @@
     "typescript": "^4.6.2",
     "vite": "^2.8.6",
     "vitest": "^0.6.1"
-  },
-  "dependencies": {
-    "@micra/error": "next"
   }
 }

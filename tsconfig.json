@@ -3,7 +3,7 @@
   "compilerOptions": {
     "declaration": true,
     "emitDeclarationOnly": true,
-    "types": ["vitest/globals", "@micra/core/error"],
+    "types": ["vitest/globals"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["*"]

@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {HTTPError, isMicraError, WrappedError} from '@micra/error';
-
 export type Handler<
   Args extends Array<any> = Array<any>,
   Return extends Promise<any> = any,
@@ -25,6 +23,16 @@ export type Middleware<FinalHandler extends Handler> = (
   ...args: Push<Parameters<FinalHandler>, Next<FinalHandler>>
 ) => ReturnType<FinalHandler>;
 
+function isError(maybeError: unknown): maybeError is Error {
+  return (
+    maybeError != null &&
+    typeof maybeError === 'object' &&
+    maybeError instanceof Error &&
+    maybeError.message != null &&
+    typeof maybeError.message === 'string'
+  );
+}
+
 export function pipe<FinalHandler extends Handler>(
   ...handlers: Push<Middleware<FinalHandler>[], FinalHandler>
 ): (
@@ -37,7 +45,7 @@ export function pipe<FinalHandler extends Handler>(
     ...args: Parameters<FinalHandler>
   ): Promise<Awaited<ReturnType<FinalHandler>>> {
     let index = 0;
-    const next = async function next(
+    async function next(
       error?: Error | null,
       ...nextArgs: Parameters<FinalHandler>
     ) {
@@ -55,20 +63,11 @@ export function pipe<FinalHandler extends Handler>(
           ? await middleware(...newArgs, next as Next<FinalHandler>)
           : await handler(...newArgs);
       } catch (maybeError) {
-        const error = isMicraError(maybeError)
+        throw isError(maybeError)
           ? maybeError
-          : new WrappedError(
-              (maybeError as any) instanceof Error
-                ? (maybeError as Error)
-                : new HTTPError(
-                    500,
-                    `Error while handling middlewares: ${maybeError}`,
-                  ),
-            );
-
-        throw error;
+          : new Error(`Error while handling middlewares: ${maybeError}`);
       }
-    };
+    }
 
     return await next(null, ...args);
   };
@@ -83,10 +82,7 @@ export function pipeSync<FinalHandler extends SyncHandler>(
     ...args: Parameters<FinalHandler>
   ): ReturnType<FinalHandler> {
     let index = 0;
-    const next = function next(
-      error?: Error | null,
-      ...nextArgs: Parameters<FinalHandler>
-    ) {
+    function next(error?: Error | null, ...nextArgs: Parameters<FinalHandler>) {
       try {
         if (error) {
           throw error;
@@ -101,20 +97,11 @@ export function pipeSync<FinalHandler extends SyncHandler>(
           ? middleware(...newArgs, next as Next<FinalHandler>)
           : handler(...newArgs);
       } catch (maybeError) {
-        const error = isMicraError(maybeError)
+        throw isError(maybeError)
           ? maybeError
-          : new WrappedError(
-              (maybeError as any) instanceof Error
-                ? (maybeError as Error)
-                : new HTTPError(
-                    500,
-                    `Error while handling middlewares: ${maybeError}`,
-                  ),
-            );
-
-        throw error;
+          : new Error(`Error while handling middlewares: ${maybeError}`);
       }
-    };
+    }
 
     return next(null, ...args);
   };
