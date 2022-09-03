@@ -5,7 +5,7 @@ specifiers:
   '@micra/commit-lint-config': next
   '@micra/eslint-config': next
   '@micra/typescript-config': next
-  '@micra/vite-config': 0.1.0-next.5
+  '@micra/vite-config': next
   '@types/node': ^17.0.21
   c8: ^7.11.0
   concurrently: ^7.0.0
